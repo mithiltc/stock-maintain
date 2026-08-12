@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from model import product
-from database import session
+from database import LocalSession,engine
 import databasemodel
 
 app = FastAPI()
-databasemodel.Base.metadata.create_all(bind=databasemodel.engine)
+databasemodel.Base.metadata.create_all(bind=engine)
 
 products = [
     product(id=1, name="laptop", price=999.99),
@@ -20,7 +20,7 @@ def hello():
 
 @app.get("/products")
 def get_products():
-    db=session()
+    db=LocalSession()
     db.query()
     return products
 
@@ -53,5 +53,5 @@ def delete_product(id:int):
     for i in range(len(products)):
         if products[i].id==id:
             del(products[i])
-    raise HTTPExecption(status_code=404,detail="product not found")        
+    raise HTTPExcption(status_code=404,detail="product not found")        
 
